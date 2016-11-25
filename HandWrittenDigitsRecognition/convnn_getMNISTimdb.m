@@ -4,22 +4,32 @@ if ~exist(opts.dataDir, 'dir')
   mkdir(opts.dataDir) ;
 end
 
-f=fopen(fullfile(opts.dataDir, 'train-images.idx3-ubyte'),'r') ;
+path1 = fullfile(opts.dataDir, strcat('train-images','-','idx3-ubyte'));
+path2 = fullfile(opts.dataDir, strcat('t10k-images','-','idx3-ubyte'));
+path3 = fullfile(opts.dataDir, strcat('train-labels','-','idx1-ubyte'));
+path4 = fullfile(opts.dataDir, strcat('t10k-labels','-','idx1-ubyte'));
+
+gunzip(strcat(path1,'.gz'), opts.dataDir);
+gunzip(strcat(path2,'.gz'), opts.dataDir);
+gunzip(strcat(path3,'.gz'), opts.dataDir);
+gunzip(strcat(path4,'.gz'), opts.dataDir);
+
+f=fopen(path1,'r') ;
 x1=fread(f,inf,'uint8');
 fclose(f) ;
 x1=permute(reshape(x1(17:end),28,28,60e3),[2 1 3]) ;
 
-f=fopen(fullfile(opts.dataDir, 't10k-images.idx3-ubyte'),'r') ;
+f=fopen(path2,'r') ;
 x2=fread(f,inf,'uint8');
 fclose(f) ;
 x2=permute(reshape(x2(17:end),28,28,10e3),[2 1 3]) ;
 
-f=fopen(fullfile(opts.dataDir, 'train-labels.idx1-ubyte'),'r') ;
+f=fopen(path3,'r') ;
 y1=fread(f,inf,'uint8');
 fclose(f) ;
-y1=double(y1(9:end)')+1 ;
+y1=double(y1(9:end)')+1;
 
-f=fopen(fullfile(opts.dataDir, 't10k-labels.idx1-ubyte'),'r') ;
+f=fopen(path4,'r') ;
 y2=fread(f,inf,'uint8');
 fclose(f) ;
 y2=double(y2(9:end)')+1 ;
